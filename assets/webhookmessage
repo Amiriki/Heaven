@@ -1,0 +1,53 @@
+local data = {
+		["username"] = "Field of Heaven Autofarm | Display Name: "..LocalPlayer.DisplayName.." (UID: "..tostring(LocalPlayer.UserId)..")",
+		["embeds"] = {{
+			["description"] = "Round over!",
+			["thumbnail"] = {
+				["url"] = HttpService:JSONDecode(PlayerThumbnail).data[1].imageUrl
+			},
+			["type"] = "rich",
+			["color"] = tonumber(0xffffff),
+			["fields"] = {
+				{
+					["name"] = ":moneybag: Gold",
+					["value"] = tostring(Format_Number(Stats.Gold.Value))..' (+'..(Format_Number(Stats.Gold.Value - Gold))..')',
+					["inline"] = false
+				},
+				{
+					["name"] = ":moneybag: Hourly Gold :hourglass:",
+					["value"] = tostring(Format_Number(math.floor(HourlyGold + 0.5))),
+					["inline"] = false
+				},
+				{
+					["name"] = ":man_in_tuxedo: Exp",
+					["value"] = tostring(Format_Number(Stats.XP.Value))..' (+'..(Format_Number(Stats.XP.Value - XP))..')',
+					["inline"] = false
+				},
+				{
+				["name"] = ":man_in_tuxedo: Hourly Exp :hourglass:",
+					["value"] = tostring(Format_Number(math.floor(HourlyExp + 0.5))),
+					["inline"] = false
+				},
+				{
+					["name"] = ":test_tube: Level",
+					["value"] = tostring(Stats.Level.Value)..' ('..Format_Number(string.split(Split_Label, ' / ')[1])..' / '..Format_Number(string.split(Split_Label, ' / ')[2])..')',
+					["inline"] = false
+				},
+				{
+					["name"] = ":stopwatch: Time Elapsed",
+					["value"] = tostring(Format_Number(TimeElapsed))..' seconds',
+					["inline"] = false
+				},
+				{
+					["name"] = ":scroll: Changelog",
+					["value"] = [[```Field of Heaven GUI released on xx/xx/xxxx!```]],
+					["inline"] = false
+				},
+			},
+
+			["footer"] = {
+				["icon_url"] = "https://i.vgy.me/7hO15E.png",
+				["text"] = 'Round lasted '..(os.time() - Time)..' seconds | developed by amiriki | contact me for feedback'
+			}
+		}}
+	}
