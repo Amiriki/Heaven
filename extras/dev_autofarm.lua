@@ -4,6 +4,7 @@ local Players = game:GetService('Players')
 local Teams = game:GetService('Teams')
 local HttpService = game:GetService('HttpService')
 local RunService = game:GetService('RunService')
+local StarterGui = game:GetService('StarterGui')
 local LocalPlayer = Players.LocalPlayer
 local Stats = LocalPlayer.leaderstats
 local Gold = Stats.Gold.Value
