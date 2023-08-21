@@ -139,7 +139,7 @@ function Attack(target, weapon)
 	if LocalPlayer.Backpack:FindFirstChild(weapon) then LocalPlayer.Character.Humanoid:EquipTool(LocalPlayer.Backpack:FindFirstChild(weapon)) end
 
 	repeat
-		if not target:FindFirstChild('Torso') or FailsafeTripped then return end
+		if not target:FindFirstChild('Torso') then return end
 		LocalPlayer.Character:FindFirstChild(weapon):Activate()
 		LocalPlayer.Character.HumanoidRootPart.CFrame = target.Torso.CFrame * CFrame.new(0,0,3)
 		task.wait(0.125)
