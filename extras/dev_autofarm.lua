@@ -38,7 +38,7 @@ function SendWebhook()
 	local data = {
 		["username"] = LocalPlayer.DisplayName,
 		["embeds"] = {{
-			["title"] = "Field of Heaven Autofarm",
+			["title"] = "[DEV] Field of Heaven Autofarm",
 			["description"] = "Round over!",
 			["thumbnail"] = {
 				["url"] = HttpService:JSONDecode(Thumbnail).data[1].imageUrl
