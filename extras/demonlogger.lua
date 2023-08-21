@@ -11,7 +11,7 @@ function Send_Alert()
 			["fields"] = {
 				{
 					["name"] = "Join Link",
-					["value"] = "roblox://placeID="..tostring(game.PlaceId).."&gameInstanceId="..tostring(game.JobId)
+					["value"] = "roblox://placeID="..tostring(game.PlaceId).."&gameInstanceId="..tostring(game.JobId),
 					["inline"] = false
 				}
 			},
