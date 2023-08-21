@@ -135,13 +135,15 @@ end
 
 function Attack(target, weapon)
     if not target or not weapon then return end
-	NotifyChat('Attacking enemy '..target.Name)
+	NotifyChat('Attacking enemy '..target.Name, Color3.fromRGB(69, 69, 215))
 	if LocalPlayer.Backpack:FindFirstChild(weapon) then LocalPlayer.Character.Humanoid:EquipTool(LocalPlayer.Backpack:FindFirstChild(weapon)) end
 
 	repeat
-		if not target:FindFirstChild('Torso') then return end
-		LocalPlayer.Character:FindFirstChild(weapon):Activate()
-		LocalPlayer.Character.HumanoidRootPart.CFrame = target.Torso.CFrame * CFrame.new(0,0,3)
+		pcall(function()
+			if not target:FindFirstChild('Torso') then return end
+			LocalPlayer.Character:FindFirstChild(weapon):Activate()
+			LocalPlayer.Character.HumanoidRootPart.CFrame = target.Torso.CFrame * CFrame.new(0,0,3)
+		end)
 		task.wait(0.125)
 	until not target or not target:FindFirstChild('Humanoid') or target:FindFirstChild('Humanoid').Health == 0
 end
