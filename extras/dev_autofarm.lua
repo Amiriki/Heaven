@@ -198,8 +198,8 @@ NPCs.DescendantAdded:Connect(function(obj)
 end)
 
 for i, v in pairs(NPCs:GetDescendants()) do
-	if obj.Name:find('General') and obj:FindFirstChild('Humanoid') then 
-		obj:FindFirstChild('Humanoid').Died:Connect(function()
+	if v.Name:find('General') and v:FindFirstChild('Humanoid') then 
+		v:FindFirstChild('Humanoid').Died:Connect(function()
 			if FOFConfig.AutofarmEnabled then
 				Players:Chat(':mapvote '..(FOFConfig.Map or 'Savannah'))
 				if FOFConfig.WebhookEnabled then 
