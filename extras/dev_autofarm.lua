@@ -81,8 +81,9 @@ function SendWebhook()
 					["inline"] = false
 				},
 				{
-					["name"] = ":scroll: Changelog 21/08/23",
-					["value"] = [[```Development Autofarm has no changelog```]],
+					["name"] = ":scroll: Changelog 18/08/23",
+					["value"] = [[```- Added a feature to the config called 'AutoShutdownTimer'. Set this to 0 if you don't want to automatically be kicked. Time is calculated in hours.
+					Join the discord (discord.gg/sXvQMuKQGX) for updates regarding the script```]],
 					["inline"] = false
 				},
 			},
@@ -181,17 +182,33 @@ Players.PlayerRemoving:Connect(function()
 end)
 
 NPCs.DescendantAdded:Connect(function(obj)
-    if obj.Name:find('General') and obj:FindFirstChild('Humanoid') then 
-        obj:WaitForChild('Humanoid').Died:Connect(function()
-            if FOFConfig.AutofarmEnabled then
-                Players:Chat(':mapvote '..(FOFConfig.Map or 'Savannah'))
-                if FOFConfig.WebhookEnabled then 
-                    SendWebhook() 
-                end
-            end
-        end)
-    end
+	if obj.Name:find('General') then 
+		local Humanoid = obj:WaitForChild('Humanoid', 3)
+		if Humanoid then
+			obj:WaitForChild('Humanoid').Died:Connect(function()
+				if FOFConfig.AutofarmEnabled then
+					Players:Chat(':mapvote '..(FOFConfig.Map or 'Savannah'))
+					if FOFConfig.WebhookEnabled then 
+						SendWebhook() 
+					end
+				end
+			end)
+		end
+	end
 end)
+
+for i, v in pairs(NPCs:GetDescendants()) do
+	if obj.Name:find('General') and obj:FindFirstChild('Humanoid') then 
+		obj:FindFirstChild('Humanoid').Died:Connect(function()
+			if FOFConfig.AutofarmEnabled then
+				Players:Chat(':mapvote '..(FOFConfig.Map or 'Savannah'))
+				if FOFConfig.WebhookEnabled then 
+					SendWebhook() 
+				end
+			end
+		end)
+	end
+end
 
 spawn(function()
 	while task.wait(1) do
