@@ -81,9 +81,8 @@ function SendWebhook()
 					["inline"] = false
 				},
 				{
-					["name"] = ":scroll: Changelog 18/08/23",
-					["value"] = [[```- Added a feature to the config called 'AutoShutdownTimer'. Set this to 0 if you don't want to automatically be kicked. Time is calculated in hours.
-					Join the discord (discord.gg/sXvQMuKQGX) for updates regarding the script```]],
+					["name"] = ":scroll: Changelog 21/08/23",
+					["value"] = [[```Development Autofarm has no changelog```]],
 					["inline"] = false
 				},
 			},
@@ -221,3 +220,7 @@ Players.LocalPlayer.Idled:connect(function()
 end)
 
 LocalPlayer.Character:BreakJoints()
+
+NotifyChat("Development Autofarm has successfully been executed.", Color3.fromRGB(69, 215, 69))
+NotifyChat("Report any bugs to Amiriki on Discord", Color3.fromRGB(69, 69, 215))
+NotifyChat("Join the Discord at dsc.gg/amiriki", Color3.fromRGB(69, 69, 215))
