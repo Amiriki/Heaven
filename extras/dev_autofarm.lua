@@ -1,4 +1,3 @@
-
 -- Script Variables
 
 local Players = game:GetService('Players')
@@ -22,6 +21,10 @@ local Thumbnail = game:HttpGet("https://thumbnails.roblox.com/v1/users/avatar?us
 
 -- Script functions
 
+function NotifyChat(message, colour)
+	StarterGui:SetCore("ChatMakeSystemMessage", {Text = "[Field of Heaven] "..message, Color = colour, Font = Enum.Font.SourceSansBold, TextSize = 16})
+end
+
 function Format_Number(num) -- I skidded this whole function; I don't know how it works and I don't want to know
 	local formatted = num
 	while true do  
@@ -38,7 +41,7 @@ function SendWebhook()
 	local data = {
 		["username"] = LocalPlayer.DisplayName,
 		["embeds"] = {{
-			["title"] = "[DEV] Field of Heaven Autofarm",
+			["title"] = "Field of Heaven Autofarm",
 			["description"] = "Round over!",
 			["thumbnail"] = {
 				["url"] = HttpService:JSONDecode(Thumbnail).data[1].imageUrl
@@ -143,7 +146,6 @@ function Attack(target, weapon)
 end
 
 -- Script events
-
 LocalPlayer.CharacterAdded:Connect(function()
     if FOFConfig.AutofarmEnabled then
 		local CurrentWeapon
