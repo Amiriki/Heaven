@@ -138,6 +138,7 @@ end
 function PathfindToObject(Object, Character) 
 	if not Object or not Character then return error('Missing object or character') end
     local Waypoints
+    task.wait(0.5)
     repeat task.wait()
 		Path:ComputeAsync(Character.PrimaryPart.Position, Object.Position)
 	until Path.Status == Enum.PathStatus.Success
