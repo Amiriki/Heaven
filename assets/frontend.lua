@@ -82,15 +82,13 @@ Tabs.Demon:AddInput("GemResponseTitan", {Title = "Response to Titan", Default = 
 Tabs.Demon:AddInput("GemResponseHallowed", {Title = "Response to Hallowed Shard", Default = "WOOOOO", Placeholder = "Response to Hallowed", Numeric = false, Finished = true})
 
 -- Misc Elements
---Tabs.Misc:AddSection('Character')
---Tabs.Misc:AddSlider("Walkspeed", {Title = 'Walkspeed', Default = (LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()).Humanoid.WalkSpeed, Min = 0, Max = 250, Rounding = 0.5})
---Tabs.Misc:AddSlider("Jumppower", {Title = 'JumpPower', Default = (LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()).Humanoid.JumpPower, Min = 0, Max = 200, Rounding = 0.5})
 
 Tabs.Misc:AddSection('World')
 Tabs.Misc:AddToggle('FullbrightToggle', {Title = "Fullbright", Default = true})
 Tabs.Misc:AddToggle('RemoveGrassToggle', {Title = "Remove Grass", Default = true})
---Tabs.Misc:AddToggle('AllMapFly', {Title = "Enable Flying on All Maps", Default = false})
---Tabs.Misc:AddToggle('AllWeaponFly', {Title = "Enable Flying with Every Item", Default = false})
+
+Tabs.Misc:AddSection('Script')
+Tabs.Misc:AddToggle('DebugModeToggle', {Title = 'Enable Debug Mode', Default = false})
 
 -- Scripting the tab elements
 
@@ -185,6 +183,10 @@ end)
 
 Options.RemoveGrassToggle:OnChanged(function()
     sethiddenproperty(workspace.Terrain, "Decoration", not Options.RemoveGrassToggle.Value)
+end)
+
+Options.DebugModeToggle:OnChanged(function()
+    Config.DebugMode = Options.DebugModeToggle.Value
 end)
 
 SaveManager:SetLibrary(Fluent)
