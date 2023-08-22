@@ -260,6 +260,6 @@ end)
 
 -- [[ Final Code ]] --
 
-NotifyChat("Field of Heaven Beta has successfully been executed.", Color3.fromRGB(69, 215, 69))
-NotifyChat("Report any bugs to Amiriki on Discord", Color3.fromRGB(69, 69, 215))
-NotifyChat("Join the Discord at dsc.gg/amiriki", Color3.fromRGB(69, 69, 215))
+NotifyChat("Field of Heaven Beta has successfully been executed.", Color3.fromRGB(69, 215, 69), true)
+NotifyChat("Report any bugs to Amiriki on Discord", Color3.fromRGB(69, 69, 215), true)
+NotifyChat("Join the Discord at dsc.gg/amiriki", Color3.fromRGB(69, 69, 215), true)
