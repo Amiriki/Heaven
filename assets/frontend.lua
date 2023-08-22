@@ -65,7 +65,10 @@ Tabs.Demon:AddToggle("RedTracersToggle", {Title = "Red Diamond Tracers", Default
 Tabs.Demon:AddColorpicker("RedTracersColour", {Title = "Red Diamond Tracer Colour", Default = Color3.fromRGB(255, 0, 0)})
 
 Tabs.Demon:AddSection('Legendary Gem Obtainer')
-Tabs.Demon:AddToggle("ObtainGemToggle", {Title = "Pathfind to Legendary Gem", Default = false })
+Tabs.Demon:AddToggle("ObtainGemToggle", {Title = "Pathfind to Legendary Gem", Default = false})
+Tabs.Demon:AddToggle("GemLoggingToggle", {Title = "Gem Webhook Logging", Default = false})
+Tabs.Demon:AddInput("GemWebhookURL", {Title = "Webhook URL", Default = "", Placeholder = "https://discord.com/api/webhooks/", Numeric = false, Finished = true})
+Tabs.Demon:AddToggle("IncludeUsernameToggle", {Title = "Includes Player Username", Default = false})
 
 Tabs.Demon:AddSection('Extras')
 Tabs.Demon:AddToggle("AutoMapvoteRogueToggle", {Title = "Automatically Vote Rogue", Default = true })
@@ -128,6 +131,18 @@ Options.ObtainGemToggle:OnChanged(function()
     Config.PathfindToGem = Options.ObtainGemToggle.Value
 end)
 
+Options.GemLoggingToggle:OnChanged(function()
+    Config.GemLoggingEnabled = Options.GemLoggingEnabled.Value
+end)
+
+Options.GemWebhookURL:OnChanged(function()
+    Config.GemWebhookURL = Options.GemWebhookURL.Value
+end)
+
+Options.IncludeUsernameToggle:OnChanged(function()
+    Config.GemLoggingIncludesUsername = Options.IncludeUsernameToggle.Value
+end)
+
 Options.AutoMapvoteRogueToggle:OnChanged(function()
     Config.AutoMapvoteRogue = Options.AutoMapvoteRogueToggle.Value
 end)
@@ -163,18 +178,6 @@ end)
 Options.GemResponseHallowed:OnChanged(function()
     Config.GemResponseHallowed = Options.GemResponseHallowed.Value
 end)
-
-
--- Misc Elements
---[[Options.Walkspeed:OnChanged(function()
-    (LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()):WaitForChild('Humanoid').WalkSpeed = Options.Walkspeed.Value
-    Config.Walkspeed = Options.Walkspeed.Value
-end)
-
-Options.Jumppower:OnChanged(function()
-    (LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()):WaitForChild('Humanoid').JumpPower = Options.Jumppower.Value
-    Config.Jumppower = Options.Jumppower.Value
-end)]]
 
 Options.FullbrightToggle:OnChanged(function()
     Config.Fullbright = Options.FullbrightToggle.Value
