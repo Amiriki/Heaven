@@ -132,7 +132,7 @@ Options.ObtainGemToggle:OnChanged(function()
 end)
 
 Options.GemLoggingToggle:OnChanged(function()
-    Config.GemLoggingEnabled = Options.GemLoggingEnabled.Value
+    Config.GemLoggingEnabled = Options.GemLoggingToggle.Value
 end)
 
 Options.GemWebhookURL:OnChanged(function()
