@@ -48,7 +48,7 @@ local Options = Fluent.Options
 -- Autofarm Elements
 Tabs.Autofarm:AddParagraph({Title = "This function is not available in this GUI", Content = "For optimisation and maintenance reasons, this feature is not available in this gui.\nClick the buttons below to either join the discord server, or to copy the script to your clipboard!"})
 Tabs.Autofarm:AddButton({Title = "Copy Discord Invite", Description = "dsc.gg/amiriki", Callback = function() setclipboard('dsc.gg/amiriki') end})
-Tabs.Autofarm:AddButton({Title = "Copy Script", Description = "dsc.gg/amiriki", Callback = function() setclipboard(game:HttpGet("https://scriptblox.com/raw/Field-of-Battle-Farming-Autarm-7317"))() end})
+Tabs.Autofarm:AddButton({Title = "Copy Script", Description = "https://scriptblox.com/script/Field-of-Battle-Farming-Autarm-7317", Callback = function() setclipboard(game:HttpGet("https://scriptblox.com/raw/Field-of-Battle-Farming-Autarm-7317"))() end})
 
 
 -- Demon Elements
