@@ -197,8 +197,8 @@ Projectiles.ChildAdded:Connect(function(obj)
         if GemType then
             local GemNum = GemType.Value
                 -- [[ Red Diamond Visuals ]] --
-            if FOHAPI.Configuration.RedDiamondESPEnabled or FOHAPI.Configuration.RedDiamondTracersEnabled then
-                if GemNum == 10 then
+            if FOHAPI.Configuration.RedDiamondESPEnabled or FOHAPI.Configuration.RedDiamondTracersEnabled and workspace.Difficulty.Value ~= 1 then
+                if GemNum == 31 then
                     if FOHAPI.Configuration.RedDiamondESPEnabled then
                         DrawGemESP(obj, "RedDiamondESPColour", "RedDiamondESPEnabled")
                     end
@@ -278,4 +278,4 @@ end)
 
 NotifyChat("Field of Heaven Beta has successfully been executed.", Color3.fromRGB(69, 215, 69))
 NotifyChat("Report any bugs to Amiriki on Discord", Color3.fromRGB(69, 69, 215))
-NotifyChat("Join the Discord at dsc.gg/amiriki!", Color3.fromRGB(69, 69, 215))
+NotifyChat("Join the Discord at dsc.gg/amiriki", Color3.fromRGB(69, 69, 215))
