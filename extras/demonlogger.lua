@@ -4,7 +4,7 @@ local ReplicatedStorage = game:GetService('ReplicatedStorage')
 
 function Send_Alert()
 	local data = {
-		["content"] = "<@1143538325081301123>",
+		["content"] = "<@&1143538325081301123>",
 		["embeds"] = {{
 			["title"] = "A Demon is spawning!",
 			["type"] = "rich",
