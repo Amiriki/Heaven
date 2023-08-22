@@ -46,21 +46,8 @@ local Options = Fluent.Options
 -- Creating elements for the tabs
 
 -- Autofarm Elements
-Tabs.Autofarm:AddSection('Basic Settings')
-Tabs.Autofarm:AddToggle("AutofarmToggle", {Title = "Autofarm Enabled", Default = false })
-Tabs.Autofarm:AddInput("NPCWeapon", {Title = "NPC Weapon", Default = "", Placeholder = "e.g. Venomancer", Numeric = false, Finished = true})
-Tabs.Autofarm:AddInput("GeneralWeapon", {Title = "General Weapon", Default = "", Placeholder = "e.g. Heavens Edge", Numeric = false, Finished = true})
-Tabs.Autofarm:AddInput("Map", {Title = "Map Voter", Default = "Savannah", Placeholder = "e.g. Savannah", Numeric = false, Finished = true})
+Tabs.Autofarm:AddParagraph
 
-Tabs.Autofarm:AddSection('Logging')
-Tabs.Autofarm:AddToggle("WebhookToggle", {Title = "Webhook Logging Enabled", Default = false })
-Tabs.Autofarm:AddInput("WebhookURL", {Title = "Webhook URL", Default = "", Placeholder = "https://discord.com/api/webhooks/", Numeric = false, Finished = true})
-Tabs.Autofarm:AddToggle("StatsCalculator", {Title = "Show Stats Calculator", Default = false })
-
-Tabs.Autofarm:AddSection('Failsafes')
-Tabs.Autofarm:AddToggle("DisableOnJoin", {Title = "Disable on Player Join", Default = true })
-Tabs.Autofarm:AddToggle("EnableOnLeave", {Title = "Re-enable on Player Leaving", Default = true })
-Tabs.Autofarm:AddToggle("IgnorePlayers", {Title = "Ignore Other Players", Default = false })
 
 -- Demon Elements
 Tabs.Demon:AddSection('Legendary Gem Visuals')
@@ -80,11 +67,19 @@ Tabs.Demon:AddToggle("ObtainGemToggle", {Title = "Pathfind to Legendary Gem", De
 
 Tabs.Demon:AddSection('Extras')
 Tabs.Demon:AddToggle("AutoMapvoteRogueToggle", {Title = "Automatically Vote Rogue", Default = true })
+Tabs.Demon:AddToggle("AutoGemResponseToggle", {Title = "Automatically Respond to Legendary Gems", Default = false })
+Tabs.Demon:AddInput("GemResponseMithril", {Title = "Response to Mithril", Default = "I GOT MITH", Placeholder = "Response to Mithril", Numeric = false, Finished = true})
+Tabs.Demon:AddInput("GemResponseDemonite", {Title = "Response to Demonite", Default = "DEMO", Placeholder = "Response to Demonite", Numeric = false, Finished = true})
+Tabs.Demon:AddInput("GemResponseFury", {Title = "Response to Fury", Default = "FURY!!!", Placeholder = "Response to Fury", Numeric = false, Finished = true})
+Tabs.Demon:AddInput("GemResponseDragon", {Title = "Response to Dragon", Default = "bruh drag", Placeholder = "Response to Dragon", Numeric = false, Finished = true})
+Tabs.Demon:AddInput("GemResponseSpirit", {Title = "Response to Spirit", Default = "shard", Placeholder = "Response to Spirit", Numeric = false, Finished = true})
+Tabs.Demon:AddInput("GemResponseTitan", {Title = "Response to Titan", Default = "yess titan", Placeholder = "Response to Titan", Numeric = false, Finished = true})
+Tabs.Demon:AddInput("GemResponseHallowed", {Title = "Response to Hallowed Shard", Default = "WOOOOO", Placeholder = "Response to Hallowed", Numeric = false, Finished = true})
 
 -- Misc Elements
-Tabs.Misc:AddSection('Character')
-Tabs.Misc:AddSlider("Walkspeed", {Title = 'Walkspeed', Default = (LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()).Humanoid.WalkSpeed, Min = 0, Max = 250, Rounding = 0.5})
-Tabs.Misc:AddSlider("Jumppower", {Title = 'JumpPower', Default = (LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()).Humanoid.JumpPower, Min = 0, Max = 200, Rounding = 0.5})
+--Tabs.Misc:AddSection('Character')
+--Tabs.Misc:AddSlider("Walkspeed", {Title = 'Walkspeed', Default = (LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()).Humanoid.WalkSpeed, Min = 0, Max = 250, Rounding = 0.5})
+--Tabs.Misc:AddSlider("Jumppower", {Title = 'JumpPower', Default = (LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()).Humanoid.JumpPower, Min = 0, Max = 200, Rounding = 0.5})
 
 Tabs.Misc:AddSection('World')
 Tabs.Misc:AddToggle('FullbrightToggle', {Title = "Fullbright", Default = true})
@@ -93,47 +88,6 @@ Tabs.Misc:AddToggle('RemoveGrassToggle', {Title = "Remove Grass", Default = true
 --Tabs.Misc:AddToggle('AllWeaponFly', {Title = "Enable Flying with Every Item", Default = false})
 
 -- Scripting the tab elements
-
--- Autofarm Elements
-Options.AutofarmToggle:OnChanged(function()
-    Config.AutofarmEnabled = Options.AutofarmToggle.Value
-end)
-
-Options.NPCWeapon:OnChanged(function()
-    Config.NPCWeapon = Options.NPCWeapon.Value
-end)
-
-Options.GeneralWeapon:OnChanged(function()
-    Config.GeneralWeapon = Options.GeneralWeapon.Value
-end)
-
-Options.Map:OnChanged(function()
-    Config.Map = Options.Map.Value
-end)
-
-Options.WebhookToggle:OnChanged(function()
-    Config.WebhookEnabled = Options.WebhookToggle.Value
-end)
-
-Options.WebhookURL:OnChanged(function()
-    Config.WebhookURL = Options.WebhookURL.Value
-end)
-
---[[
-    Stats calculator not implemented yet
---]]
-
-Options.DisableOnJoin:OnChanged(function()
-    Config.DisableOnJoin = Options.DisableOnJoin.Value
-end)
-
-Options.EnableOnLeave:OnChanged(function()
-    Config.EnableOnLeave = Options.EnableOnLeave.Value
-end)
-
-Options.IgnorePlayers:OnChanged(function()
-    Config.IgnorePlayers = Options.IgnorePlayers.Value
-end)
 
 -- Demon Elements
 Options.GemESPToggle:OnChanged(function()
@@ -176,8 +130,41 @@ Options.AutoMapvoteRogueToggle:OnChanged(function()
     Config.AutoMapvoteRogue = Options.AutoMapvoteRogueToggle.Value
 end)
 
+Options.AutoGemResponseToggle:OnChanged(function()
+    Config.AutoGemResponse = Options.AutoGemResponseToggle.Value
+end)
+
+Options.GemResponseMithril:OnChanged(function()
+    Config.GemResponseMithril = Options.GemResponseMithril.Value
+end)
+
+Options.GemResponseDemonite:OnChanged(function()
+    Config.GemResponseDemonite = Options.GemResponseDemonite.Value
+end)
+
+Options.GemResponseFury:OnChanged(function()
+    Config.GemResponseFury = Options.GemResponseFury.Value
+end)
+
+Options.GemResponseDragon:OnChanged(function()
+    Config.GemResponseDragon = Options.GemResponseDragon.Value
+end)
+
+Options.GemResponseSpirit:OnChanged(function()
+    Config.GemResponseSpirit = Options.GemResponseSpirit.Value
+end)
+
+Options.GemResponseTitan:OnChanged(function()
+    Config.GemResponseTitan = Options.GemResponseTitan.Value
+end)
+
+Options.GemResponseHallowed:OnChanged(function()
+    Config.GemResponseHallowed = Options.GemResponseHallowed.Value
+end)
+
+
 -- Misc Elements
-Options.Walkspeed:OnChanged(function()
+--[[Options.Walkspeed:OnChanged(function()
     (LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()):WaitForChild('Humanoid').WalkSpeed = Options.Walkspeed.Value
     Config.Walkspeed = Options.Walkspeed.Value
 end)
@@ -185,7 +172,7 @@ end)
 Options.Jumppower:OnChanged(function()
     (LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()):WaitForChild('Humanoid').JumpPower = Options.Jumppower.Value
     Config.Jumppower = Options.Jumppower.Value
-end)
+end)]]
 
 Options.FullbrightToggle:OnChanged(function()
     Config.Fullbright = Options.FullbrightToggle.Value
