@@ -234,7 +234,7 @@ workspace.ChildAdded:Connect(function(obj)
     if obj.Name ~= "Configuration" or obj.ClassName ~= "Folder" then return end
     local Demon = obj:WaitForChild('Objectives'):WaitForChild('Demon', 3)
     if Demon then
-        NotifyChat('Great Demon Spawn is spawning! Defeat it!', Color3.fromRGB(215, 69, 69))
+        NotifyChat('Great Demon Spawn is spawning! Defeat it!', Color3.fromRGB(175, 0, 0), true)
     end
 end)
 
