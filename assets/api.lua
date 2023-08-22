@@ -73,8 +73,8 @@ function Send_Log(url, gem, username)
     if username then username = LocalPlayer.Username else username = "Username Hidden" end
 
     local data = {
-        ["username"] = "Field of Heaven Legendary Gem Alerts | Username: "..username
-        ["embeds"] = {{
+        ["username"] = "Field of Heaven Legendary Gem Alerts | Username: "..username,
+        ["embeds"] = {
             ["title"] = "Legendary Gem Picked Up!",
             ["type"] = "rich",
             ["color"] = tonumber(0xaf0000),
@@ -86,7 +86,7 @@ function Send_Log(url, gem, username)
             },
             ["footer"] = {
 				["text"] = 'legendary gem detector | dsc.gg/amiriki | written by amiriki'
-			}}}}
+			}}}
 
     request({Url = url, Method = 'POST', Headers = {['Content-Type'] = 'application/json'}, Body = HttpService:JSONEncode(data)})
 end
@@ -230,7 +230,7 @@ NPCs.DescendantAdded:Connect(function(obj)
     end
 end)
 
-workspace.ChildAdded:Conenct(function(obj)
+workspace.ChildAdded:Connect(function(obj)
     if obj.Name ~= "Configuration" or obj.ClassName ~= "Folder" then return end
     local Demon = obj:WaitForChild('Objectives'):WaitForChild('Demon', 3)
     if Demon then
