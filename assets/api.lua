@@ -32,6 +32,9 @@ local ValuableGems = {[32] = true, [33] = true, [34] = true, [35] = true, [36] =
 -- [[ Config Script ]] --
 getgenv().FOHAPI = {}
 FOHAPI.Configuration = {
+    ['GemLoggingEnabled'] = false,
+    ['GemWebhookURL'] = '',
+    ['GemLoggingIncludesUsername'] = false,
     ['AutoGemResponseEnabled'] = false,
     ['GemResponseMithril'] = "",
     ['GemResponseDemonite'] = "",
@@ -50,19 +53,42 @@ FOHAPI.Configuration = {
     ['RedDiamondTracersEnabled'] = true,
     ['RedDiamondTracersColour'] = Color3.fromRGB(255, 00, 0),
     ['PathfindToGem'] = true,
-    ['Walkspeed'] = (LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()):WaitForChild('Humanoid').WalkSpeed,
-    ['Jumppower'] = (LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()):WaitForChild('Humanoid').JumpPower,
     ['Fullbright'] = true,
     ['DisableDecoration'] = true,
+    ['DebugMode'] = false,
 }
 
 -- [[ Functions ]] --
-function NotifyChat(message, colour)
-	StarterGui:SetCore("ChatMakeSystemMessage", {Text = "[Field of Heaven] "..message, Color = colour, Font = Enum.Font.SourceSansBold, TextSize = 16})
+function NotifyChat(message, colour, required)
+	if required then
+		return StarterGui:SetCore("ChatMakeSystemMessage", {Text = "[Field of Heaven] "..message, Color = colour, Font = Enum.Font.SourceSansBold, TextSize = 16})
+	end
+
+	if FOHAPI.Configuration.DebugMode then
+		return StarterGui:SetCore("ChatMakeSystemMessage", {Text = "[Field of Heaven] "..message, Color = colour, Font = Enum.Font.SourceSansBold, TextSize = 16})
+	end
 end
 
-function SendWebhook()
+function Send_Log(url, gem, username)
+    if username then username = LocalPlayer.Username else username = "Username Hidden" end
 
+    local data = {
+        ["username"] = "Field of Heaven Legendary Gem Alerts | Username: "..username
+        ["embeds"] = {{
+            ["title"] = "Legendary Gem Picked Up!",
+            ["type"] = "rich",
+            ["color"] = tonumber(0xaf0000),
+            ["fields"] = {
+                {
+                    ["name"] = "**Gem**",
+                    ["value"] = gem
+                },
+            },
+            ["footer"] = {
+				["text"] = 'legendary gem detector | dsc.gg/amiriki | written by amiriki'
+			}}}}
+
+    request({Url = url, Method = 'POST', Headers = {['Content-Type'] = 'application/json'}, Body = HttpService:JSONEncode(data)})
 end
 
 function Attack(target, weapon)
@@ -161,23 +187,7 @@ function PathfindToObject(Object, Character)
 	end
 end
 
--- [[ Events ]] --
-
---[[
-LocalPlayer.CharacterAdded:Connect(function()
-    
-end)
-
-Players.PlayerAdded:Connect(function(Player)
-
-end)
-
-Players.PlayerRemoving:Connect(function()
-
-end)]]
-
 RunService.RenderStepped:Connect(function()
-    -- [[ Fullbright code (skidded from IY but whatever) ]] --
     if FOHAPI.Configuration.Fullbright then 
         Lighting.Brightness = 2
         Lighting.ClockTime = 14
@@ -185,11 +195,6 @@ RunService.RenderStepped:Connect(function()
         Lighting.GlobalShadows = false
         Lighting.OutdoorAmbient = Color3.fromRGB(128, 128, 128)
     end
-
-    -- Disabled on suspicion of it being detected.
-    --(LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()):WaitForChild('Humanoid').WalkSpeed = FOHAPI.Configuration.Walkspeed;
-    --LocalPlayer.Character:WaitForChild('Humanoid').JumpPower = FOHAPI.Configuration.Jumppower;
-    --LocalPlayer.Character:WaitForChild('Humanoid').UseJumpPower = true;
 end)
 
 Projectiles.ChildAdded:Connect(function(obj)
@@ -197,32 +202,16 @@ Projectiles.ChildAdded:Connect(function(obj)
 		local GemType = obj:WaitForChild('GemType', 5)
         if GemType then
             local GemNum = GemType.Value
-                -- [[ Red Diamond Visuals ]] --
-            if FOHAPI.Configuration.RedDiamondESPEnabled or FOHAPI.Configuration.RedDiamondTracersEnabled and workspace.Difficulty.Value ~= 1 then
-                if GemNum == 31 then
-                    if FOHAPI.Configuration.RedDiamondESPEnabled then
-                        DrawGemESP(obj, "RedDiamondESPColour", "RedDiamondESPEnabled")
-                    end
-
-                    if FOHAPI.Configuration.RedDiamondTracersEnabled then
-                        DrawTracer(obj, 2, "RedDiamondTracersColour", "RedDiamondTracersEnabled")
-                    end
-                end
+            if GemNum == 31 and FOHAPI.Configuration.RedDiamondESPEnabled or FOHAPI.Configuration.RedDiamondTracersEnabled and workspace.Difficulty.Value ~= 1 then
+                if FOHAPI.Configuration.RedDiamondESPEnabled then DrawGemESP(obj, "RedDiamondESPColour", "RedDiamondESPEnabled") end
+                if FOHAPI.Configuration.RedDiamondTracersEnabled then DrawTracer(obj, 2, "RedDiamondTracersColour", "RedDiamondTracersEnabled") end
             end
+
 		    if ValuableGems[GemNum] then
                 NotifyChat("Legendary Gem Dropped, GemType is "..tostring(GemNum), obj:FindFirstChild('GemGlow').Color)
-
-			    if FOHAPI.Configuration.GemTracersEnabled then
-				    DrawTracer(obj, 2, "GemTracersColour", "GemTracersEnabled")
-			    end
-
-                if FOHAPI.Configuration.GemESPEnabled then
-				    DrawGemESP(obj, "GemESPColour", "GemESPEnabled")
-			    end
-
-			    if FOHAPI.Configuration.PathfindToGem then
-				    PathfindToObject(obj, LocalPlayer.Character)
-			    end
+			    if FOHAPI.Configuration.GemTracersEnabled then DrawTracer(obj, 2, "GemTracersColour", "GemTracersEnabled") end
+                if FOHAPI.Configuration.GemESPEnabled then DrawGemESP(obj, "GemESPColour", "GemESPEnabled") end
+                if FOHAPI.Configuration.PathfindToGem then PathfindToObject(obj, LocalPlayer.Character) end
             end
 		end  
 	end
@@ -238,6 +227,14 @@ NPCs.DescendantAdded:Connect(function(obj)
                 end
             end)
         end
+    end
+end)
+
+workspace.ChildAdded:Conenct(function(obj)
+    if obj.Name ~= "Configuration" or obj.ClassName ~= "Folder" then return end
+    local Demon = obj:WaitForChild('Objectives'):WaitForChild('Demon', 3)
+    if Demon then
+        NotifyChat('Great Demon Spawn is spawning! Defeat it!', Color3.fromRGB(215, 69, 69))
     end
 end)
 
@@ -270,6 +267,10 @@ ReplicatedStorage.Remote.ShowPlayerMessage.OnClientEvent:Connect(function(text, 
                     task.wait(math.random(1, 2.5))
                     ChatRemote:FireServer(FOHAPI.Configuration['GemResponse'..split[4]], "All")
                 end
+            end
+
+            if FOHAPI.Configuration.GemLoggingEnabled then
+                Send_Log(FOHAPI.Configuration.GemWebhookURL, split[4], FOHAPI.Configuration.IncludeUsernameToggle)
             end
         end
     end
