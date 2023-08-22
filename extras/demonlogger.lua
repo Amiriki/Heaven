@@ -22,8 +22,10 @@ function Send_Alert()
 	request({Url = "https://discord.com/api/webhooks/1143211463092211923/Wr6Ok1IyMTAYrohcNkmgBXC_BOZ0sJ848W3_mDqGlEK-NM6sjfR9dkhNUC3t8eQF6anC", Method = 'POST', Headers = {['Content-Type'] = 'application/json'}, Body = HttpService:JSONEncode(data)})
 end
 
-ReplicatedStorage.Remote.ShowPlayerMessage.OnClientEvent:Connect(function(text, colour)
-	if text:find('Billy Ray Joe:') then
-		Send_Alert()
-	end
+workspace.ChildAdded:Connect(function(obj)
+    if obj.Name ~= "Configuration" or obj.ClassName ~= "Folder" then return end
+    local Demon = obj:WaitForChild('Objectives'):WaitForChild('Demon', 3)
+    if Demon then
+        Send_Alert()
+    end
 end)
