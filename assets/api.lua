@@ -238,27 +238,9 @@ workspace.ChildAdded:Connect(function(obj)
     end
 end)
 
--- Thanks to Sown for helping me with this
-
---[[ Disabled on suspicion of flagging - it also breaks flight lmao
-local OldIndex
-OldIndex = hookmetamethod(game, "__index", newcclosure(function(Self, Key)
-    if not checkcaller() and Self:IsA('Humanoid') and Key == "WalkSpeed" then
-        return Humanoid.WalkSpeed
-    elseif not checkcaller() and Self:IsA('Humanoid') and Key == "JumpPower" then
-        return 50
-    end
-
-    return OldIndex(Self, Key)
-end))]]
-
 -- [[ Server Message Remote ]] --
 
 ReplicatedStorage.Remote.ShowPlayerMessage.OnClientEvent:Connect(function(text, colour)
-	if text:find('Billy Ray Joe:') then
-        NotifyChat('Great Demon Spawn is spawning! Defeat it!', Color3.fromRGB(215, 69, 69))
-	end
-
     if text:find(' found a ') then
         local split = text:split(" ")
         if split[1] == LocalPlayer.Name then
