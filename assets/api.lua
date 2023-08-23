@@ -27,7 +27,7 @@ local NPCs = workspace['Unbreakable']['Characters']
 local Projectiles = workspace['Unbreakable']['Projectiles']
 local ChatRemote = ReplicatedStorage.DefaultChatSystemChatEvents.SayMessageRequest
 local GemResponses = HttpService:JSONDecode(game:HttpGet("https://raw.githubusercontent.com/Amiriki/Heaven/main/assets/gemresponses.json"))
-local ValuableGems = {[32] = true, [33] = true, [34] = true, [35] = true, [36] = true, [42] = true}
+local ValuableGems = {["Mithril"] = 32, ["Demonite"] = 33, ["Fury Stone"] = 34, ["Dragon Bone"] = 35, ["Spirit Shard"] = 36, ["Titan Core"] = 42}
 
 -- [[ Config Script ]] --
 getgenv().FOHAPI = {}
@@ -38,11 +38,11 @@ FOHAPI.Configuration = {
     ['AutoGemResponseEnabled'] = false,
     ['GemResponseMithril'] = "",
     ['GemResponseDemonite'] = "",
-    ['GemResponseFury'] = "",
-    ['GemResponseDragon'] = "",
-    ['GemResponseSpirit'] = "",
-    ['GemResponseTitan'] = "",
-    ['GemResponseHallowed'] = "",
+    ['GemResponseFuryStone'] = "",
+    ['GemResponseDragonBone'] = "",
+    ['GemResponseSpiritShard'] = "",
+    ['GemResponseTitanCore'] = "",
+    ['GemResponseHallowedShard'] = "",
     ['AutoMapvoteRogue'] = true,
     ['GemESPEnabled'] = true,
     ['GemESPColour'] = Color3.fromRGB(255, 255, 255),
@@ -69,8 +69,8 @@ function NotifyChat(message, colour, required)
 	end
 end
 
-function Send_Log(url, gem, username)
-    if username then username = LocalPlayer.Username else username = "Username Hidden" end
+function Send_Log(url, gem)
+    if FOHAPI.Configuration.IncludeUsernameToggle then username = LocalPlayer.Username else username = "Username Hidden" end
 
     local data = {
         ["username"] = "Field of Heaven Legendary Gem Alerts | Username: "..username,
@@ -80,7 +80,7 @@ function Send_Log(url, gem, username)
             ["color"] = tonumber(0xaf0000),
             ["fields"] = {
                 {
-                    ["name"] = "**Gem**",
+                    ["name"] = "**Gem Name**",
                     ["value"] = gem
                 },
             },
@@ -207,7 +207,7 @@ Projectiles.ChildAdded:Connect(function(obj)
                 if FOHAPI.Configuration.RedDiamondTracersEnabled then DrawTracer(obj, 2, "RedDiamondTracersColour", "RedDiamondTracersEnabled") end
             end
 
-		    if ValuableGems[GemNum] then
+		    if table.find(ValuableGems, GemNum) then
                 NotifyChat("Legendary Gem Dropped, GemType is "..tostring(GemNum), obj:FindFirstChild('GemGlow').Color)
 			    if FOHAPI.Configuration.GemTracersEnabled then DrawTracer(obj, 2, "GemTracersColour", "GemTracersEnabled") end
                 if FOHAPI.Configuration.GemESPEnabled then DrawGemESP(obj, "GemESPColour", "GemESPEnabled") end
@@ -241,21 +241,17 @@ end)
 -- [[ Server Message Remote ]] --
 
 ReplicatedStorage.Remote.ShowPlayerMessage.OnClientEvent:Connect(function(text, colour)
-    if text:find(' found a ') then
-        local split = text:split(" ")
-        if split[1] == LocalPlayer.Name then
-            if FOHAPI.Configuration['GemResponse'..split[4]] then
-                if FOHAPI.Configuration.AutoGemResponseEnabled then
-                    task.wait(math.random(1, 2.5))
-                    ChatRemote:FireServer(FOHAPI.Configuration['GemResponse'..split[4]], "All")
-                end
-            end
+    local GemName = nil
+    if not text:find(LocalPlayer.Name..' found a ') then return end
 
-            if FOHAPI.Configuration.GemLoggingEnabled then
-                Send_Log(FOHAPI.Configuration.GemWebhookURL, split[4], FOHAPI.Configuration.IncludeUsernameToggle)
-            end
+    for gemtype, gem in pairs(ValuableGems) do
+        if text:find(gem) then 
+            GemName = gem:gsub(" ", "")
         end
     end
+
+    if FOHAPI.Configuration['GemResponse'..GemName] and FOHAPI.Configuration.AutoGemResponseEnabled then task.wait(math.random(1, 2.5)); ChatRemote:FireServer(FOHAPI.Configuration['GemResponse'..GemName], "All"); end
+    if FOHAPI.Configuration.GemLoggingEnabled then Send_Log(FOHAPI.Configuration.GemWebhookURL, (GemName or "Unknown Gem (Report This)")); end
 end)
 
 -- [[ Final Code ]] --
