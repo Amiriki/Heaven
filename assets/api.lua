@@ -202,7 +202,7 @@ Projectiles.ChildAdded:Connect(function(obj)
 		local GemType = obj:WaitForChild('GemType', 5)
         if GemType then
             local GemNum = GemType.Value
-            if GemNum == 31 and FOHAPI.Configuration.RedDiamondESPEnabled or FOHAPI.Configuration.RedDiamondTracersEnabled and workspace.Difficulty.Value ~= 1 then
+            if GemNum == 31 and workspace.Difficulty.Value ~= 1 and (FOHAPI.Configuration.RedDiamondESPEnabled or FOHAPI.Configuration.RedDiamondTracersEnabled) then
                 if FOHAPI.Configuration.RedDiamondESPEnabled then DrawGemESP(obj, "RedDiamondESPColour", "RedDiamondESPEnabled") end
                 if FOHAPI.Configuration.RedDiamondTracersEnabled then DrawTracer(obj, 2, "RedDiamondTracersColour", "RedDiamondTracersEnabled") end
             end
