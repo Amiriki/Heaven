@@ -7,23 +7,6 @@ local Configuration = workspace.Configuration
 
 -- Script Functions
 
-function GetBestWeapon()
-    local HighestDamage = 0
-    local BestWeapon
-    local Tools = LocalPlayer.Backpack:GetChildren()
-    
-    for i, v in pairs(Tools) do
-        if v:IsA('Tool') and v:FindFirstChild('BaseDamage') and v:FindFirstChild('WeaponType').Value ~= 'Bow' then
-            if v.BaseDamage.Value > HighestDamage then
-                HighestDamage = v.BaseDamage.Value
-                BestWeapon = v
-            end
-        end
-    end
-
-    return BestWeapon
-end
-
 function Attack(target, weapon)
     if not target or not weapon then return end
 	if LocalPlayer.Backpack:FindFirstChild(weapon) then LocalPlayer.Character.Humanoid:EquipTool(LocalPlayer.Backpack:FindFirstChild(weapon)) end
@@ -42,11 +25,16 @@ LocalPlayer.CharacterAdded:Connect(function()
     if not DemonConfig.Enabled then return end
     local Weapon
     repeat task.wait() until #LocalPlayer.Backpack:GetChildren() > 0
-    if DemonConfig.Weapon ~= "" then Weapon = DemonConfig.Weapon else Weapon = GetBestWeapon() end
 
     if LocalPlayer.Team.Name ~= 'Neutral' and DemonConfig.AttackGenerals then
-        print('Trying to attack Generals')
-        return Attack(NPCs:FindFirstChild(Configuration:FindFirstChild('Objectives')[LocalPlayer.Team.Name].Kill.Value, true), Weapon)
+        local target
+        if LocalPlayer.Team.Name == 'Human' then
+            target = NPCs.Orc:WaitForChild('Orc General')
+        elseif LocalPlayer.Team.Name == 'Orc'
+            target = NPCs.Human:WaitForChild('Human General')
+        end
+
+        return Attack(target, Weapon)
     end
 
     local DemonFolder = NPCs:WaitForChild('Demon', 5)
