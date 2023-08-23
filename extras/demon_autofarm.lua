@@ -9,6 +9,7 @@ local Configuration = workspace.Configuration
 
 function Attack(target, weapon)
     if not target or not weapon then return end
+    repeat task.wait() until LocalPlayer.Backpack:FindFirstChild(weapon) or LocalPlayer.Character:FindFirstChild(weapon)
 	if LocalPlayer.Backpack:FindFirstChild(weapon) then LocalPlayer.Character.Humanoid:EquipTool(LocalPlayer.Backpack:FindFirstChild(weapon)) end
 
 	repeat
@@ -22,32 +23,16 @@ function Attack(target, weapon)
 end
 
 LocalPlayer.CharacterAdded:Connect(function()
-    if not DemonConfig.Enabled then return print'its disabled' end
-    local Weapon = DemonConfig.Weapon
-    repeat task.wait() until #LocalPlayer.Backpack:GetChildren() > 0
+    if not DemonConfig.Enabled then return end
 
-    if LocalPlayer.Team.Name ~= 'Neutral' and DemonConfig.AttackGenerals then
-        print'looking for target'
-        local target
-        if LocalPlayer.Team.Name == 'Human' then
-            print'player is human'
-            target = NPCs.Orc:WaitForChild('Orc General')
-        elseif LocalPlayer.Team.Name == 'Orc' then
-            print'player is orc'
-            target = NPCs.Human:WaitForChild('Human General')
+    if not LocalPlayer.Neutral then
+        local Target = NPCs[LocalPlayer.Team.Name]:FindFirstChild(LocalPlayer.Team.Name..' General')
+        return Attack(target, DemonConfig.Weapon)
+    else
+        local DemonFolder = NPCs:WaitForChild('Demon', 3)
+        if DemonFolder then
+            pcall(function() return Attack(DemonFolder:FindFirstChild('Giant Demon Spawn'), DemonConfig.Weapon) end)
         end
-        print(target.Name)
-        print'attacking!!'
-        return Attack(target, Weapon)
-    end
-
-    local DemonFolder = NPCs:WaitForChild('Demon', 5)
-    if DemonFolder then
-        local Demon = DemonFolder:WaitForChild('Giant Demon Spawn', 10)
-        if Demon then
-            Attack(Demon, Weapon)
-        end
-        return
     end
 end)
 
