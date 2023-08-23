@@ -27,7 +27,8 @@ local NPCs = workspace['Unbreakable']['Characters']
 local Projectiles = workspace['Unbreakable']['Projectiles']
 local ChatRemote = ReplicatedStorage.DefaultChatSystemChatEvents.SayMessageRequest
 local GemResponses = HttpService:JSONDecode(game:HttpGet("https://raw.githubusercontent.com/Amiriki/Heaven/main/assets/gemresponses.json"))
-local ValuableGems = {["Mithril"] = 32, ["Demonite"] = 33, ["Fury Stone"] = 34, ["Dragon Bone"] = 35, ["Spirit Shard"] = 36, ["Titan Core"] = 42}
+local ValuableGemsNamed = {["Mithril"] = 32, ["Demonite"] = 33, ["Fury Stone"] = 34, ["Dragon Bone"] = 35, ["Spirit Shard"] = 36, ["Titan Core"] = 42}
+local ValuableGems = {[32] = true, [33] = true, [34] = true, [35] = true, [36] = true, [42] = true}
 
 -- [[ Config Script ]] --
 getgenv().FOHAPI = {}
@@ -204,16 +205,16 @@ Projectiles.ChildAdded:Connect(function(obj)
         if GemType then
             local GemNum = GemType.Value
 
-            for gem, gemtype in pairs(ValuableGems) do
+            --[[for gem, gemtype in pairs(ValuableGems) do
                 if GemNum == GemType then Legendary = true end
-            end
+            end]]
 
             if GemNum == 31 and workspace.Difficulty.Value ~= 1 then
                 if FOHAPI.Configuration.RedDiamondESPEnabled then DrawGemESP(obj, "RedDiamondESPColour", "RedDiamondESPEnabled") end
                 if FOHAPI.Configuration.RedDiamondTracersEnabled then DrawTracer(obj, 2, "RedDiamondTracersColour", "RedDiamondTracersEnabled") end
             end
 
-		    if Legendary then
+		    if ValuableGems[GemNum] then
                 NotifyChat("Legendary Gem Dropped, GemType is "..tostring(GemNum), obj:FindFirstChild('GemGlow').Color)
 			    if FOHAPI.Configuration.GemTracersEnabled then DrawTracer(obj, 2, "GemTracersColour", "GemTracersEnabled") end
                 if FOHAPI.Configuration.GemESPEnabled then DrawGemESP(obj, "GemESPColour", "GemESPEnabled") end
@@ -250,7 +251,7 @@ ReplicatedStorage.Remote.ShowPlayerMessage.OnClientEvent:Connect(function(text, 
     local GemName = nil
     if not text:find(LocalPlayer.Name..' found a ') then return end
 
-    for gemtype, gem in pairs(ValuableGems) do
+    for gemtype, gem in pairs(ValuableGemsNamed) do
         if text:find(gem) then 
             GemName = gem:gsub(" ", "")
         end
