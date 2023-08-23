@@ -22,18 +22,21 @@ function Attack(target, weapon)
 end
 
 LocalPlayer.CharacterAdded:Connect(function()
-    if not DemonConfig.Enabled then return end
+    if not DemonConfig.Enabled then return print'its disabled' end
     local Weapon
     repeat task.wait() until #LocalPlayer.Backpack:GetChildren() > 0
 
     if LocalPlayer.Team.Name ~= 'Neutral' and DemonConfig.AttackGenerals then
+        print'looking for target'
         local target
         if LocalPlayer.Team.Name == 'Human' then
+            print'player is human'
             target = NPCs.Orc:WaitForChild('Orc General')
         elseif LocalPlayer.Team.Name == 'Orc' then
+            print'player is orc'
             target = NPCs.Human:WaitForChild('Human General')
         end
-
+        print'attacking!!'
         return Attack(target, Weapon)
     end
 
