@@ -251,7 +251,7 @@ ReplicatedStorage.Remote.ShowPlayerMessage.OnClientEvent:Connect(function(text, 
     local GemName = nil
     if not text:find(LocalPlayer.Name..' found a ') then return end
 
-    for gemtype, gem in pairs(ValuableGemsNamed) do
+    for gem, gemtype in pairs(ValuableGemsNamed) do
         if text:find(gem) then 
             GemName = gem:gsub(" ", "")
         end
