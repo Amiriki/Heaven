@@ -1,13 +1,9 @@
---[[
-    Automatic Demon Farming Script
-    Blatant - Don't use in public servers or you risk a ban
-    Written by Amiriki
---]]
 -- Script Variables
 
 local Players = game:GetService('Players')
 local LocalPlayer = Players.LocalPlayer
 local NPCs = workspace.Unbreakable.Characters
+local Configuration = workspace.Configuration
 
 -- Script Functions
 
@@ -17,10 +13,11 @@ function GetBestWeapon()
     local Tools = LocalPlayer.Backpack:GetChildren()
     
     for i, v in pairs(Tools) do
-        if not v:IsA('Tool') or not v:FindFirstChild('BaseDamage') or not v:FindFirstChild('WeaponType').Value == 'Sword' then return end
-        if v.BaseDamage.Value > HighestDamage then
-            HighestDamage = v.BaseDamage.Value
-            BestWeapon = v
+        if v:IsA('Tool') and v:FindFirstChild('BaseDamage') and v:FindFirstChild('WeaponType').Value ~= 'Bow' then
+            if v.BaseDamage.Value > HighestDamage then
+                HighestDamage = v.BaseDamage.Value
+                BestWeapon = v
+            end
         end
     end
 
@@ -48,7 +45,8 @@ LocalPlayer.CharacterAdded:Connect(function()
     if DemonConfig.Weapon ~= "" then Weapon = DemonConfig.Weapon else Weapon = GetBestWeapon() end
 
     if LocalPlayer.Team.Name ~= 'Neutral' and DemonConfig.AttackGenerals then
-        return Attack(NPCs:FindFirstChild(Configuration:FindFirstChild('Objectives')[LocalPlayer.Team.Name]:FindFirstChildOfClass('StringValue').Value, true), Weapon)
+        print('Trying to attack Generals')
+        return Attack(NPCs:FindFirstChild(Configuration:FindFirstChild('Objectives')[LocalPlayer.Team.Name].Kill.Value, true), Weapon)
     end
 
     local DemonFolder = NPCs:WaitForChild('Demon', 5)
