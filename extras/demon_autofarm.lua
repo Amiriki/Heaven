@@ -30,7 +30,7 @@ LocalPlayer.CharacterAdded:Connect(function()
         local target
         if LocalPlayer.Team.Name == 'Human' then
             target = NPCs.Orc:WaitForChild('Orc General')
-        elseif LocalPlayer.Team.Name == 'Orc'
+        elseif LocalPlayer.Team.Name == 'Orc' then
             target = NPCs.Human:WaitForChild('Human General')
         end
 
