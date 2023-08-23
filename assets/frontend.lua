@@ -158,23 +158,23 @@ Options.GemResponseDemonite:OnChanged(function()
 end)
 
 Options.GemResponseFury:OnChanged(function()
-    Config.GemResponseFury = Options.GemResponseFury.Value
+    Config.GemResponseFuryStone = Options.GemResponseFury.Value
 end)
 
 Options.GemResponseDragon:OnChanged(function()
-    Config.GemResponseDragon = Options.GemResponseDragon.Value
+    Config.GemResponseDragonBone = Options.GemResponseDragon.Value
 end)
 
 Options.GemResponseSpirit:OnChanged(function()
-    Config.GemResponseSpirit = Options.GemResponseSpirit.Value
+    Config.GemResponseSpiritShard = Options.GemResponseSpirit.Value
 end)
 
 Options.GemResponseTitan:OnChanged(function()
-    Config.GemResponseTitan = Options.GemResponseTitan.Value
+    Config.GemResponseTitanCore = Options.GemResponseTitan.Value
 end)
 
 Options.GemResponseHallowed:OnChanged(function()
-    Config.GemResponseHallowed = Options.GemResponseHallowed.Value
+    Config.GemResponseHallowedShard = Options.GemResponseHallowed.Value
 end)
 
 Options.FullbrightToggle:OnChanged(function()
