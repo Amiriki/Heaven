@@ -1,15 +1,3 @@
---[[
-    Automatic Demon Farming Script
-    Blatant - Don't use in public servers or you risk a ban
-    Written by Amiriki
---]]
-
-getgenv().DemonConfig = {
-    ["Enabled"] = true,
-    ["AttackGenerals"] = true,
-    ["Weapon"] = "Greatsword of Flying II", -- Leave this blank if you want the script to automatically choose a weapon.
-}
-
 -- Script Variables
 
 local Players = game:GetService('Players')
@@ -49,7 +37,7 @@ LocalPlayer.CharacterAdded:Connect(function()
     else
         local DemonFolder = NPCs:WaitForChild('Demon', 3)
         if DemonFolder then
-            pcall(function() return Attack(DemonFolder:FindFirstChild('Giant Demon Spawn'), DemonConfig.Weapon) end)
+            return Attack(DemonFolder:FindFirstChild('Giant Demon Spawn'), DemonConfig.Weapon)
         end
     end
 end)
