@@ -15,10 +15,11 @@ function Attack(target, weapon)
 	repeat
 		pcall(function()
 			if not target:FindFirstChild('Torso') then return end
+            		if LocalPlayer.Backpack:FindFirstChild(weapon) then LocalPlayer.Character.Humanoid:EquipTool(LocalPlayer.Backpack:FindFirstChild(weapon)) end
 			LocalPlayer.Character:FindFirstChild(weapon):Activate()
 			LocalPlayer.Character.HumanoidRootPart.CFrame = target.Torso.CFrame * CFrame.new(0,0,3)
 		end)
-		task.wait(0.125)
+		task.wait()
 	until not target or not target:FindFirstChild('Humanoid') or target:FindFirstChild('Humanoid').Health == 0 or not LocalPlayer.Character or not LocalPlayer.Character:FindFirstChild('Humanoid') or LocalPlayer.Character:FindFirstChild('Humanoid').Health == 0
 end
 
