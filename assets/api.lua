@@ -200,14 +200,20 @@ end)
 Projectiles.ChildAdded:Connect(function(obj)
 	if FOHAPI.Configuration.GemTracersEnabled or FOHAPI.Configuration.GemESPEnabled or FOHAPI.Configuration.RedDiamondESPEnabled or FOHAPI.Configuration.PathfindToGem then
 		local GemType = obj:WaitForChild('GemType', 5)
+        local Legendary = false
         if GemType then
             local GemNum = GemType.Value
+
+            for gem, gemtype in pairs(ValuableGems) do
+                if GemNum == GemType then Legendary = true end
+            end
+
             if GemNum == 31 and workspace.Difficulty.Value ~= 1 and (FOHAPI.Configuration.RedDiamondESPEnabled or FOHAPI.Configuration.RedDiamondTracersEnabled) then
                 if FOHAPI.Configuration.RedDiamondESPEnabled then DrawGemESP(obj, "RedDiamondESPColour", "RedDiamondESPEnabled") end
                 if FOHAPI.Configuration.RedDiamondTracersEnabled then DrawTracer(obj, 2, "RedDiamondTracersColour", "RedDiamondTracersEnabled") end
             end
 
-		    if table.find(ValuableGems, GemNum) then
+		    if Legendary then
                 NotifyChat("Legendary Gem Dropped, GemType is "..tostring(GemNum), obj:FindFirstChild('GemGlow').Color)
 			    if FOHAPI.Configuration.GemTracersEnabled then DrawTracer(obj, 2, "GemTracersColour", "GemTracersEnabled") end
                 if FOHAPI.Configuration.GemESPEnabled then DrawGemESP(obj, "GemESPColour", "GemESPEnabled") end
