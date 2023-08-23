@@ -208,7 +208,7 @@ Projectiles.ChildAdded:Connect(function(obj)
                 if GemNum == GemType then Legendary = true end
             end
 
-            if GemNum == 31 and workspace.Difficulty.Value ~= 1 and (FOHAPI.Configuration.RedDiamondESPEnabled or FOHAPI.Configuration.RedDiamondTracersEnabled) then
+            if GemNum == 31 and workspace.Difficulty.Value ~= 1 then
                 if FOHAPI.Configuration.RedDiamondESPEnabled then DrawGemESP(obj, "RedDiamondESPColour", "RedDiamondESPEnabled") end
                 if FOHAPI.Configuration.RedDiamondTracersEnabled then DrawTracer(obj, 2, "RedDiamondTracersColour", "RedDiamondTracersEnabled") end
             end
