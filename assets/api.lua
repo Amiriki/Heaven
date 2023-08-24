@@ -248,17 +248,19 @@ end)
 -- [[ Server Message Remote ]] --
 
 ReplicatedStorage.Remote.ShowPlayerMessage.OnClientEvent:Connect(function(text, colour)
-    local GemName = nil
     if not text:find(LocalPlayer.Name..' found a ') then return end
+    local textSplit = text:gsub('!', ''):split(' ')
+    local gemName = table.concat({textSplit[4], textSplit[5]}, ' ')
+    LocalObtainedGem({textSplit[4], textSplit[5]}) else ElseObtainedGem({textSplit[4], textSplit[5]}) end
 
-    for gem, gemtype in pairs(ValuableGemsNamed) do
-        if text:find(gem) then 
-            GemName = gem:gsub(" ", "")
-        end
+    if FOHAPI.Configuration['GemResponse'..gemName:gsub(' ', '')] and FOHAPI.Configuration.AutoGemResponseEnabled then
+        task.wait(math.random(1, 2.5));
+        ChatRemote:FireServer(FOHAPI.Configuration['GemResponse'..gemName:gsub(' ', '')], "All")
     end
 
-    if FOHAPI.Configuration['GemResponse'..GemName] and FOHAPI.Configuration.AutoGemResponseEnabled then task.wait(math.random(1, 2.5)); ChatRemote:FireServer(FOHAPI.Configuration['GemResponse'..GemName], "All"); end
-    if FOHAPI.Configuration.GemLoggingEnabled then Send_Log(FOHAPI.Configuration.GemWebhookURL, (GemName or "Unknown Gem (Report This)")); end
+    if FOHAPI.Configuration.GemLoggingEnabled then
+        Send_Log(FOHAPI.Configuration.GemWebhookURL, (gemName or "Unknown Gem (Report This)"))
+    end
 end)
 
 -- [[ Final Code ]] --
