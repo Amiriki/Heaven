@@ -251,7 +251,6 @@ ReplicatedStorage.Remote.ShowPlayerMessage.OnClientEvent:Connect(function(text, 
     if not text:find(LocalPlayer.Name..' found a ') then return end
     local textSplit = text:gsub('!', ''):split(' ')
     local gemName = table.concat({textSplit[4], textSplit[5]}, ' ')
-    LocalObtainedGem({textSplit[4], textSplit[5]}) else ElseObtainedGem({textSplit[4], textSplit[5]}) end
 
     if FOHAPI.Configuration['GemResponse'..gemName:gsub(' ', '')] and FOHAPI.Configuration.AutoGemResponseEnabled then
         task.wait(math.random(1, 2.5));
