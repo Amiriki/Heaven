@@ -75,7 +75,7 @@ function Send_Log(url, gem)
 
     local data = {
         ["username"] = "Field of Heaven Legendary Gem Alerts | Username: "..username,
-        ["embeds"] = {
+        ["embeds"] = {{
             ["title"] = "Legendary Gem Picked Up!",
             ["type"] = "rich",
             ["color"] = tonumber(0xaf0000),
@@ -87,7 +87,7 @@ function Send_Log(url, gem)
             },
             ["footer"] = {
 				["text"] = 'legendary gem detector | dsc.gg/amiriki | written by amiriki'
-			}}}
+			}}}}
 
     request({Url = url, Method = 'POST', Headers = {['Content-Type'] = 'application/json'}, Body = HttpService:JSONEncode(data)})
 end
