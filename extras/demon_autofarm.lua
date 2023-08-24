@@ -58,11 +58,8 @@ LocalPlayer.CharacterAdded:Connect(function()
         return Attack(Target, Weapon)
     end
 
-
-    local DemonFolder = Configuration:WaitForChild('Objectives'):WaitForChild('Demon', 3)
-    if DemonFolder then
-        return Attack(NPCs:WaitForChild('Demon'):WaitForChild('Giant Demon Spawn'), Weapon)
-    end
+    repeat task.wait() until NPCs:FindFirstChild('Giant Demon Spawn', true)
+    Attack(NPCs:FindFirstChild('Giant Demon Spawn', true), Weapon)
 end)
 
 LocalPlayer.Character:BreakJoints()
