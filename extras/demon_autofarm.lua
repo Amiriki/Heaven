@@ -25,6 +25,7 @@ end
 
 function GetBestWeapon()
     repeat task.wait() until #LocalPlayer.Backpack:GetChildren() > 0
+    task.wait(0.5)
     local HighestDamage = 0
     local BestWeapon
     local Tools = LocalPlayer.Backpack:GetChildren()
