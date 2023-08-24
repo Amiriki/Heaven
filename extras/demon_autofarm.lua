@@ -15,7 +15,7 @@ function Attack(target, weapon)
 	repeat
 		pcall(function()
 			if not target:FindFirstChild('Torso') then return end
-            		if LocalPlayer.Backpack:FindFirstChild(weapon) then LocalPlayer.Character.Humanoid:EquipTool(LocalPlayer.Backpack:FindFirstChild(weapon)) end
+            if LocalPlayer.Backpack:FindFirstChild(weapon) then LocalPlayer.Character.Humanoid:EquipTool(LocalPlayer.Backpack:FindFirstChild(weapon)) end
 			LocalPlayer.Character:FindFirstChild(weapon):Activate()
 			LocalPlayer.Character.HumanoidRootPart.CFrame = target.Torso.CFrame * CFrame.new(0,0,3)
 		end)
@@ -23,23 +23,45 @@ function Attack(target, weapon)
 	until not target or not target:FindFirstChild('Humanoid') or target:FindFirstChild('Humanoid').Health == 0 or not LocalPlayer.Character or not LocalPlayer.Character:FindFirstChild('Humanoid') or LocalPlayer.Character:FindFirstChild('Humanoid').Health == 0
 end
 
+function GetBestWeapon()
+    repeat task.wait() until #LocalPlayer.Backpack:GetChildren() > 0
+    local HighestDamage = 0
+    local BestWeapon
+    local Tools = LocalPlayer.Backpack:GetChildren()
+    
+    for i, v in ipairs(Tools) do
+        if v:IsA('Tool') and v:WaitForChild('WeaponType').Value == 'Sword' then 
+            if v:FindFirstChild('BaseDamage').Value > HighestDamage then
+                HighestDamage = v:FindFirstChild('BaseDamage').Value
+                BestWeapon = v
+            end
+        end
+    end
+
+    return (BestWeapon.Name)
+end
+
+-- Events
+
 LocalPlayer.CharacterAdded:Connect(function()
     if not DemonConfig.Enabled then return end
+    if DemonConfig.Weapon and DemonConfig.Weapon ~= "" then Weapon = DemonConfig.Weapon else Weapon = GetBestWeapon() end
 
-    if not LocalPlayer.Neutral then
-		local Target
-		if LocalPlayer.Team.Name == "Human" then
+    if not LocalPlayer.Neutral and DemonConfig.AttackGenerals then
+        
+        if LocalPlayer.Team.Name == "Human" then
 			Target = NPCs.Orc['Orc General']
 		elseif LocalPlayer.Team.Name == "Orc" then
 			Target = NPCs.Human['Human General']
 		end
 
-        return Attack(Target, DemonConfig.Weapon)
-    else
-        local DemonFolder = NPCs:WaitForChild('Demon', 3)
-        if DemonFolder then
-            return Attack(DemonFolder:FindFirstChild('Giant Demon Spawn'), DemonConfig.Weapon)
-        end
+        return Attack(Target, Weapon)
+    end
+
+
+    local DemonFolder = Configuration:WaitForChild('Objectives'):WaitForChild('Demon', 3)
+    if DemonFolder then
+        return Attack(NPCs:WaitForChild('Demon'):WaitForChild('Giant Demon Spawn'), Weapon)
     end
 end)
 
