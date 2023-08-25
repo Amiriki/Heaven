@@ -64,4 +64,11 @@ LocalPlayer.CharacterAdded:Connect(function()
     NPCs:FindFirstChild('Giant Demon Spawn', true):FindFirstChild('Humanoid').Died:Connect(function() LocalPlayer.Character:BreakJoints() end)
 end)
 
+if DemonConfig.ShutdownTimer and DemonConfig.ShutdownTimer > 0 then
+	spawn(function()
+		task.wait(DemonConfig.ShutdownTimer * 3600)
+		game:Shutdown()
+	end)
+end
+
 LocalPlayer.Character:BreakJoints()
