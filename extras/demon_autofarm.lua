@@ -61,6 +61,7 @@ LocalPlayer.CharacterAdded:Connect(function()
 
     repeat task.wait() until NPCs:FindFirstChild('Giant Demon Spawn', true)
     Attack(NPCs:FindFirstChild('Giant Demon Spawn', true), Weapon)
+    NPCs:FindFirstChild('Giant Demon Spawn', true):FindFirstChild('Humanoid').Died:Connect(function() LocalPlayer.Character:BreakJoints() end)
 end)
 
 LocalPlayer.Character:BreakJoints()
