@@ -61,7 +61,15 @@ LocalPlayer.CharacterAdded:Connect(function()
 
     repeat task.wait() until NPCs:FindFirstChild('Giant Demon Spawn', true)
     Attack(NPCs:FindFirstChild('Giant Demon Spawn', true), Weapon)
-    NPCs:FindFirstChild('Giant Demon Spawn', true):FindFirstChild('Humanoid').Died:Connect(function() LocalPlayer.Character:BreakJoints() end)
+end)
+
+NPCs.DescendantAdded:Connect(function(obj)
+    if not DemonConfig.Enabled then return end
+    if obj.Name:find("Giant Demon Spawn") then
+        obj:WaitForChild('Humanoid').Died:Connect(function()
+            LocalPlayer.Character:BreakJoints()
+        end)
+    end
 end)
 
 if DemonConfig.ShutdownTimer and DemonConfig.ShutdownTimer > 0 then
