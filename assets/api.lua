@@ -26,8 +26,6 @@ local Time = os.time()
 local NPCs = workspace['Unbreakable']['Characters']
 local Projectiles = workspace['Unbreakable']['Projectiles']
 local ChatRemote = ReplicatedStorage.DefaultChatSystemChatEvents.SayMessageRequest
-local GemResponses = HttpService:JSONDecode(game:HttpGet("https://raw.githubusercontent.com/Amiriki/Heaven/main/assets/gemresponses.json"))
-local ValuableGemsNamed = {["Mithril"] = 32, ["Demonite"] = 33, ["Fury Stone"] = 34, ["Dragon Bone"] = 35, ["Spirit Shard"] = 36, ["Titan Core"] = 42}
 local ValuableGems = {[32] = true, [33] = true, [34] = true, [35] = true, [36] = true, [42] = true}
 
 -- [[ Config Script ]] --
@@ -71,7 +69,7 @@ function NotifyChat(message, colour, required)
 end
 
 function Send_Log(url, gem)
-    if FOHAPI.Configuration.IncludeUsernameToggle then username = LocalPlayer.Username else username = "Username Hidden" end
+    if FOHAPI.Configuration.GemLoggingIncludesUsername then username = LocalPlayer.Name else username = "Username Hidden" end
 
     local data = {
         ["username"] = "Field of Heaven Legendary Gem Alerts | Username: "..username,
@@ -201,13 +199,8 @@ end)
 Projectiles.ChildAdded:Connect(function(obj)
 	if FOHAPI.Configuration.GemTracersEnabled or FOHAPI.Configuration.GemESPEnabled or FOHAPI.Configuration.RedDiamondESPEnabled or FOHAPI.Configuration.PathfindToGem then
 		local GemType = obj:WaitForChild('GemType', 5)
-        local Legendary = false
         if GemType then
             local GemNum = GemType.Value
-
-            --[[for gem, gemtype in pairs(ValuableGems) do
-                if GemNum == GemType then Legendary = true end
-            end]]
 
             if GemNum == 31 and workspace.Difficulty.Value ~= 1 then
                 if FOHAPI.Configuration.RedDiamondESPEnabled then DrawGemESP(obj, "RedDiamondESPColour", "RedDiamondESPEnabled") end
@@ -241,7 +234,7 @@ workspace.ChildAdded:Connect(function(obj)
     if obj.Name ~= "Configuration" or obj.ClassName ~= "Folder" then return end
     local Demon = obj:WaitForChild('Objectives'):WaitForChild('Demon', 3)
     if Demon then
-        NotifyChat('Great Demon Spawn is spawning! Defeat it!', Color3.fromRGB(175, 0, 0), true)
+        NotifyChat('Giant Demon Spawn is spawning! Defeat it!', Color3.fromRGB(175, 0, 0), true)
     end
 end)
 
