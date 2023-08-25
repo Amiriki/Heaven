@@ -5,6 +5,7 @@ local Teams = game:GetService('Teams')
 local HttpService = game:GetService('HttpService')
 local RunService = game:GetService('RunService')
 local StarterGui = game:GetService('StarterGui')
+local VirtualUser = game:GetService("VirtualUser")
 local LocalPlayer = Players.LocalPlayer
 local Stats = LocalPlayer.leaderstats
 local Gold = Stats.Gold.Value
@@ -22,8 +23,14 @@ local Thumbnail = game:HttpGet("https://thumbnails.roblox.com/v1/users/avatar?us
 
 -- Script functions
 
-function NotifyChat(message, colour)
-	StarterGui:SetCore("ChatMakeSystemMessage", {Text = "[Field of Heaven] "..message, Color = colour, Font = Enum.Font.SourceSansBold, TextSize = 16})
+function NotifyChat(message, colour, required)
+	if required then
+		return StarterGui:SetCore("ChatMakeSystemMessage", {Text = "[Field of Heaven] "..message, Color = colour, Font = Enum.Font.SourceSansBold, TextSize = 16})
+	end
+
+	if FOFConfig.DebugMode then
+		return StarterGui:SetCore("ChatMakeSystemMessage", {Text = "[Field of Heaven] "..message, Color = colour, Font = Enum.Font.SourceSansBold, TextSize = 16})
+	end
 end
 
 function Format_Number(num) -- I skidded this whole function; I don't know how it works and I don't want to know
@@ -81,16 +88,15 @@ function SendWebhook()
 					["inline"] = false
 				},
 				{
-					["name"] = ":scroll: Changelog 18/08/23",
-					["value"] = [[```- Added a feature to the config called 'AutoShutdownTimer'. Set this to 0 if you don't want to automatically be kicked. Time is calculated in hours.
-					Join the discord (discord.gg/sXvQMuKQGX) for updates regarding the script```]],
+					["name"] = ":scroll: Changelog 21/08/23",
+					["value"] = [[```- Added ['AttackNeutralNPCs'] toggle to the config, and also added a table called ['UseGeneralWeaponNPCs'] = {['mage'] = true}. For more information, join the discord at dsc.gg/amiriki```]],
 					["inline"] = false
 				},
 			},
 
 			["footer"] = {
 				["icon_url"] = "https://i.vgy.me/7hO15E.png",
-				["text"] = 'Round lasted '..(os.time() - Time)..' seconds | developed by amiriki | .gg/sXvQMuKQGX for feedback'
+				["text"] = 'Round lasted '..(os.time() - Time)..' seconds | developed by amiriki | dsc.gg/amiriki for feedback'
 			}
 		}}
 	}
@@ -102,6 +108,8 @@ request({Url = FOFConfig.WebhookURL, Method = 'POST', Headers = {['Content-Type'
 end
 
 function ObtainTargets()
+	local NeutralTable = NPCs['Neutral']:GetChildren()
+	local TablePos
 	local TargetsList
     local EnemyTeam
     local Index
@@ -113,22 +121,31 @@ function ObtainTargets()
 
 	TargetsList = NPCs[EnemyTeam]:GetChildren()
 
-	for i, npc in pairs(TargetsList) do
+	if FOFConfig.AttackNeutralNPCs then
+		TablePos = #TargetsList + 1
+		for i, v in ipairs(NeutralTable) do
+			TargetsList[TablePos] = v
+			TablePos += 1
+		end
+	end
+
+	for i, npc in ipairs(TargetsList) do
 		if npc.Name:find('General')  then
 			Index = i
 			General = npc
 		end
+
+		if FOFConfig.IgnorePlayers then
+			if Players:FindFirstChild(npc.Name) then
+				TargetsList[i] = nil
+			end
+		end
 	end
 
-    if FOFConfig.IgnorePlayers then
-        for i, player in pairs(Players:GetPlayers()) do
-            if table.find(TargetsList, player.Name) then
-                TargetsList[i] = nil
-            end
-        end
-    end
+	if Index ~= nil then
+		TargetsList[Index] = nil
+	end
 
-	TargetsList[Index] = nil
 	table.insert(TargetsList, #TargetsList, General)
 	return TargetsList
 end
@@ -136,32 +153,53 @@ end
 function Attack(target, weapon)
     if not target or not weapon then return end
 	NotifyChat('Attacking enemy '..target.Name, Color3.fromRGB(69, 69, 215))
-	if LocalPlayer.Backpack:FindFirstChild(weapon) then LocalPlayer.Character.Humanoid:EquipTool(LocalPlayer.Backpack:FindFirstChild(weapon)) end
+	if LocalPlayer.Backpack:FindFirstChild(weapon[1]) then LocalPlayer.Character.Humanoid:EquipTool(LocalPlayer.Backpack:FindFirstChild(weapon[1])) end
 
-	repeat
-		pcall(function()
-			if not target:FindFirstChild('Torso') then return end
-			LocalPlayer.Character:FindFirstChild(weapon):Activate()
-			LocalPlayer.Character.HumanoidRootPart.CFrame = target.Torso.CFrame * CFrame.new(0,0,3)
-		end)
-		task.wait(0.125)
-	until not target or not target:FindFirstChild('Humanoid') or target:FindFirstChild('Humanoid').Health == 0
+	-- Thread to swap between weapons
+	spawn(function()
+		repeat
+			pcall(function()
+				if not target:FindFirstChild('Torso') then return end
+				for _,v in pairs(weapon) do if LocalPlayer.Backpack[v] then LocalPlayer.Character.Humanoid:EquipTool(v); weapon = v end
+				NotifyChat('Looping attack, target name is '..target.Name, Color3.fromRGB(69, 69, 215))
+				LocalPlayer.Character:FindFirstChild(weapon):Activate()
+			end)
+			task.wait(1)
+		until not target or not target:FindFirstChild('Humanoid') or target:FindFirstChild('Humanoid').Health == 0 or not LocalPlayer.Character or not LocalPlayer.Character:FindFirstChild('Humanoid') or LocalPlayer.Character:FindFirstChild('Humanoid').Health == 0
+	end)
+
+	-- Thread to teleport
+	spawn(function()
+		repeat
+			pcall(function()
+				if not target:FindFirstChild('Torso') then return end
+				LocalPlayer.Character.HumanoidRootPart.CFrame = target.Torso.CFrame * CFrame.new(0,0,3)
+			end)
+			task.wait()
+		until not target or not target:FindFirstChild('Humanoid') or target:FindFirstChild('Humanoid').Health == 0 or not LocalPlayer.Character or not LocalPlayer.Character:FindFirstChild('Humanoid') or LocalPlayer.Character:FindFirstChild('Humanoid').Health == 0
+	end)
+
+	NotifyChat('Player or target died', Color3.fromRGB(69, 69, 215))
 end
 
 -- Script events
 LocalPlayer.CharacterAdded:Connect(function()
+	if FOFConfig.LagMode then task.wait(1.5) end
     if FOFConfig.AutofarmEnabled then
 		local CurrentWeapon
         local Enemies = ObtainTargets()
         for index, npc in pairs(Enemies) do
-            if not FOFConfig.AutofarmEnabled then return NotifyChat('Autofarm is disabled', Color3.fromRGB(215, 69, 69)) end
+			NotifyChat('Looping through enemies, enemy name is '..npc.Name, Color3.fromRGB(69, 69, 215))
+            if not FOFConfig.AutofarmEnabled then return NotifyChat('Autofarm is disabled!', Color3.fromRGB(255, 0, 0)) end
+			if not LocalPlayer.Character or not LocalPlayer.Character:WaitForChild('Humanoid', 3) or LocalPlayer.Character:FindFirstChild('Humanoid').Health == 0 then return NotifyChat('Character died, waiting for respawn...', Color3.fromRGB(69, 69, 215)) end
             if Teams:FindFirstChild('Neutral') and LocalPlayer.Team == Teams:FindFirstChild('Neutral') then return end
 
-            if npc.Name:find('General') then CurrentWeapon = FOFConfig.BossWeapon else CurrentWeapon = FOFConfig.NPCWeapon end 
+            if npc.Name:find('General') or (FOFConfig.UseGeneralWeaponNPCs and FOFConfig.UseGeneralWeaponNPCs[npc.Name:lower():split(" ")[2]]) then CurrentWeapon = FOFConfig.BossWeapon else CurrentWeapon = FOFConfig.NPCWeapon end 
 	        repeat task.wait() until LocalPlayer.Backpack:FindFirstChild(CurrentWeapon) or LocalPlayer.Character:FindFirstChild(CurrentWeapon)
 			Attack(npc, CurrentWeapon)
             Enemies[index] = nil
         end
+		NotifyChat('End of table has been reached!', Color3.fromRGB(175, 0, 0))
     end
 end)
 
@@ -188,9 +226,7 @@ NPCs.DescendantAdded:Connect(function(obj)
 			obj:WaitForChild('Humanoid').Died:Connect(function()
 				if FOFConfig.AutofarmEnabled then
 					Players:Chat(':mapvote '..(FOFConfig.Map or 'Savannah'))
-					if FOFConfig.WebhookEnabled then 
-						SendWebhook() 
-					end
+					SendWebhook() 
 				end
 			end)
 		end
@@ -202,9 +238,7 @@ for i, v in pairs(NPCs:GetDescendants()) do
 		v:FindFirstChild('Humanoid').Died:Connect(function()
 			if FOFConfig.AutofarmEnabled then
 				Players:Chat(':mapvote '..(FOFConfig.Map or 'Savannah'))
-				if FOFConfig.WebhookEnabled then 
-					SendWebhook() 
-				end
+				SendWebhook() 
 			end
 		end)
 	end
@@ -232,12 +266,12 @@ end
 
 RunService:Set3dRenderingEnabled(not FOFConfig.DisableRendering)
 
-Players.LocalPlayer.Idled:connect(function()
-	game:GetService("VirtualUser"):ClickButton2(Vector2.new())
+LocalPlayer.Idled:connect(function()
+	VirtualUser:ClickButton2(Vector2.new())
 end)
 
 LocalPlayer.Character:BreakJoints()
 
-NotifyChat("Development Autofarm has successfully been executed.", Color3.fromRGB(69, 215, 69))
-NotifyChat("Report any bugs to Amiriki on Discord", Color3.fromRGB(69, 69, 215))
-NotifyChat("Join the Discord at dsc.gg/amiriki", Color3.fromRGB(69, 69, 215))
+NotifyChat("Autofarm has successfully been executed.", Color3.fromRGB(69, 215, 69), true)
+NotifyChat("Report any bugs to Amiriki on Discord", Color3.fromRGB(69, 69, 215), true)
+NotifyChat("Join the Discord at dsc.gg/amiriki", Color3.fromRGB(69, 69, 215), true)
