@@ -4,6 +4,7 @@ local Players = game:GetService('Players')
 local LocalPlayer = Players.LocalPlayer
 local NPCs = workspace.Unbreakable.Characters
 local Configuration = workspace.Configuration
+local DemonSpawned = false
 
 -- Script Functions
 
@@ -44,7 +45,7 @@ end
 
 -- Events
 
-LocalPlayer.CharacterAdded:Connect(function()
+LocalPlayer.CharacterAdded:Connect(function(Character)
     if not DemonConfig.Enabled then return end
     if DemonConfig.Weapon and DemonConfig.Weapon ~= "" then Weapon = DemonConfig.Weapon else Weapon = GetBestWeapon() end
 
@@ -59,7 +60,8 @@ LocalPlayer.CharacterAdded:Connect(function()
         return Attack(Target, Weapon)
     end
 
-    repeat task.wait() until NPCs:FindFirstChild('Giant Demon Spawn', true)
+    repeat task.wait() until DemonSpawned
+    if Character.Humanoid.Health == 0 then return end
     Attack(NPCs:FindFirstChild('Giant Demon Spawn', true), Weapon)
 end)
 
@@ -68,7 +70,9 @@ NPCs.DescendantAdded:Connect(function(obj)
     if obj.Name:find("Giant Demon Spawn") then
         obj:WaitForChild('Humanoid').Died:Connect(function()
             LocalPlayer.Character:BreakJoints()
+            DemonSpawned = false
         end)
+        DemonSpawned = true
     end
 end)
 
